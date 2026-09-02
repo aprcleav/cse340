@@ -1,4 +1,4 @@
-html,
+/* html,
 body {
     background-color: lightblue;
     font-family: Arial, sans-serif;
@@ -27,5 +27,194 @@ body {
                 color: #0066cc;
             }
         }
+    }
+} */
+
+/* =================================================================
+   Professional Modern Stylesheet for CSE 340 Service Network
+   ================================================================= */
+
+:root {
+    --primary-color: #1e3a8a;
+    /* Deep Slate Blue */
+    --secondary-color: #0f766e;
+    /* Accessible Teal Accent */
+    --background-color: #f8fafc;
+    /* Light Cool Gray */
+    --surface-color: #ffffff;
+    /* Pure White */
+    --text-main: #1e293b;
+    /* Dark Slate */
+    --text-muted: #475569;
+    /* Accessible Cool Gray Text */
+    --border-color: #64748b;
+    /* Accessible Border Gray */
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Base Reset & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Sticky Navigation Bar */
+nav {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul {
+    list-style: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--secondary-color);
+}
+
+/* Main Content Area */
+main {
+    max-width: 900px;
+    width: 100%;
+    margin: 2.5rem auto;
+    padding: 0 2rem;
+    flex: 1;
+}
+
+h1 {
+    color: var(--primary-color);
+    font-size: 2.25rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Home Page Specific Elements */
+main h2 {
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 600;
+}
+
+main>p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.main-logo {
+    display: block;
+    max-width: 450px;
+    width: 100%;
+    height: auto;
+    margin: 2.5rem auto 0 auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    background-color: var(--surface-color);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Card List Styles (For Organizations, Projects, Categories Pages) */
+main>ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+main>ul li {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+main>ul li:hover {
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+main>ul li img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+main>ul li strong {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+/* Footer Styling */
+footer {
+    background-color: var(--surface-color);
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 640px) {
+    nav ul {
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    main {
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+    }
+
+    main>ul li {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
     }
 }
