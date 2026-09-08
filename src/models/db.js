@@ -13,11 +13,7 @@ import { Pool } from 'pg';
  */
 const pool = new Pool({
     connectionString: process.env.DB_URL,
-    /** This line wouldn't work on Render. AI suggested the current fix.
-     * ssl: true */
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: true
 });
 
 /**
