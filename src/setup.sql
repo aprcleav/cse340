@@ -138,3 +138,67 @@ INSERT INTO service_projects (organization_id, title, description, locations, pr
  'Wrapping and handing out holiday gifts for underprivileged children.', 
  'City Community Hall', 
  '2027-12-15');
+
+ -- Categories table
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Junction table for the many-to-many relationship
+CREATE TABLE service_project_categories (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+
+    PRIMARY KEY (project_id, category_id),
+
+    CONSTRAINT fk_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_projects (project_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories (category_id)
+        ON DELETE CASCADE
+);
+
+INSERT INTO categories (name)
+VALUES
+    ('Construction'),
+    ('Environment'),
+    ('Education'),
+    ('Community Service');
+
+INSERT INTO service_project_categories (project_id, category_id)
+VALUES
+    -- BrightFuture Builders
+    (1, 3), -- Community Center Roof Repair: Community Service
+    (2, 3), -- Accessible Ramp Installation: Community Service
+    (2, 4), -- Accessible Ramp Installation: Health and Wellness
+    (3, 1), -- Sustainable Park Shelter: Environmental
+    (3, 3), -- Sustainable Park Shelter: Community Service
+    (4, 1), -- Library Eco-Renovation: Environmental
+    (4, 2), -- Library Eco-Renovation: Educational
+    (5, 3), -- Youth Center Foundation: Community Service
+
+    -- GreenHarvest Growers
+    (6, 1), -- Urban Garden Expansion: Environmental
+    (6, 3), -- Urban Garden Expansion: Community Service
+    (7, 1), -- Composting Workshop & Setup: Environmental
+    (7, 2), -- Composting Workshop & Setup: Educational
+    (8, 1), -- School Yard Farm: Environmental
+    (8, 2), -- School Yard Farm: Educational
+    (9, 1), -- Rainwater Harvesting System: Environmental
+    (10, 1), -- Fall Harvest Celebration: Environmental
+    (10, 3), -- Fall Harvest Celebration: Community Service
+
+    -- UnityServe Volunteers
+    (11, 3), -- Food Bank Stocking Drive: Community Service
+    (11, 4), -- Food Bank Stocking Drive: Health and Wellness
+    (12, 2), -- Senior Tech Support Day: Educational
+    (13, 1), -- Neighborhood Cleanup Initiative: Environmental
+    (13, 3), -- Neighborhood Cleanup Initiative: Community Service
+    (14, 3), -- Winter Coat Distribution: Community Service
+    (14, 4), -- Winter Coat Distribution: Health and Wellness
+    (15, 3); -- Holiday Toy Drive: Community Service
