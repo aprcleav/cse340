@@ -8,9 +8,14 @@
         <p>
             <%= project.description %>
         </p>
-        <p><strong>Date:</strong> <%= project.date %>
+        <p>
+            <strong>Date:</strong>
+            <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' , day: 'numeric' })
+                %>
         </p>
-        <p><strong>Location:</strong> <%= project.location %>
+        </p>
+        <p><strong>Location:</strong>
+            <%= project.location %>
         </p>
 
         <p><strong>Partner organization:</strong>
@@ -29,6 +34,7 @@
                 </li>
                 <% }); %>
         </ul>
+        <a href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
     </main>
 
     <%- include('partials/footer') %>
