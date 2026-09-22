@@ -13,7 +13,6 @@
             <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' , day: 'numeric' })
                 %>
         </p>
-        </p>
         <p><strong>Location:</strong>
             <%= project.location %>
         </p>
@@ -23,6 +22,7 @@
                 <%= project.organization_name %>
             </a>
         </p>
+        <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
 
         <h2>Categories</h2>
         <ul>
