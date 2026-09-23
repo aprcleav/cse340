@@ -112,18 +112,13 @@ const processEditProjectForm = async (req, res) => {
     const { title, description, location, date, organizationId } = req.body;
     const projectId = req.params.id;
 
-    try {
-        // Update the project in the database
-        await updateProject(projectId, title, description, location, date, organizationId);
-        // Set a success flash message
-        req.flash('success', 'Service project updated successfully!');
-        res.redirect(`/project/${projectId}`);
-    } catch (error) {
-        // Set an error flash message
-        console.error('Error updating service project:', error);
-        req.flash('error', 'Failed to update service project.');
-        res.redirect(`project/${projectId}`);
-    }
+    await updateProject(projectId, title, description, location, date, organizationId);
+
+    // Set a success flash message
+    req.flash('success', 'Service project updated successfully!');
+
+    res.redirect(`/project/${projectId}`);
+
 };
 
 export { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, showEditProjectForm, processEditProjectForm, projectValidation };
