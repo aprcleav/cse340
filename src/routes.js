@@ -5,6 +5,7 @@ import { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganization
 import { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, projectValidation, showEditProjectForm, processEditProjectForm } from './controllers/projects.js';
 import { showCategoriesPage, showCategoryDetailsPage, showAssignCategoriesForm, processAssignCategoriesForm, categoryValidation, showEditCategoryForm, processEditCategoryForm, showNewCategoryForm, processNewCategoryForm } from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
+import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard } from './controllers/users.js';
 
 
 
@@ -70,3 +71,21 @@ router.get('/edit-category/:id', showEditCategoryForm);
 
 // Route to handle edit category form submission
 router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
+
+// Route to display the user registration form
+router.get('/register', showUserRegistrationForm);
+
+// Route to handle user registration form submission
+router.post('/register', processUserRegistrationForm);
+
+// Route to display the login form
+router.get('/login', showLoginForm);
+
+// Route to handle login form submission
+router.post('/login', processLoginForm);
+
+// Route to handle logout
+router.get('/logout', processLogout);
+
+// Route to display the user dashboard (requires login)
+router.get('/dashboard', requireLogin, showDashboard);
