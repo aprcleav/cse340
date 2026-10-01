@@ -5,7 +5,7 @@ import { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganization
 import { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, projectValidation, showEditProjectForm, processEditProjectForm } from './controllers/projects.js';
 import { showCategoriesPage, showCategoryDetailsPage, showAssignCategoriesForm, processAssignCategoriesForm, categoryValidation, showEditCategoryForm, processEditCategoryForm, showNewCategoryForm, processNewCategoryForm } from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
-import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole } from './controllers/users.js';
+import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole, showRegisteredUsers } from './controllers/users.js';
 
 
 
@@ -90,4 +90,5 @@ router.get('/logout', processLogout);
 // Route to display the user dashboard (requires login)
 router.get('/dashboard', requireLogin, showDashboard);
 
-//
+// Route to display the registered users page (requires admin role)
+router.get('/registered-users', requireRole('admin', '/dashboard'), showRegisteredUsers);

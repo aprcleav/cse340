@@ -66,7 +66,7 @@ const processNewProjectForm = async (req, res) => {
             req.flash('error', error.msg);
         });
         // Redirect back to the new project form
-        return res.redirect('/new-project');;
+        return res.redirect('/new-project');
     }
 
     // Extract form data from the request body

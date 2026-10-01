@@ -4,5 +4,8 @@
     <h2>Welcome to your dashboard, <%= name %>!</h2>
     <p><strong>Name:</strong> <%= name %></p>
     <p><strong>Email:</strong> <%= email %></p>
+    <% if (user && user.role_name==='admin' ) { %>
+        <p><a href="/registered-users">View Registered Users</a></p>
+        <% } %>
 </main>
 <%- include('partials/footer') %>

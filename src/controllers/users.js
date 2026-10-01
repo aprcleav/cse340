@@ -1,5 +1,5 @@
-import bcrytp from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import bcrypt from 'bcrypt';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -10,20 +10,20 @@ const processUserRegistrationForm = async (req, res) => {
 
     try {
         // Hash the password before storing it
-        const salt = await bcrytp.genSalt(10);
-        const passwordHash = await bcrytp.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
 
         // Create the user in the database
-        const userId = await createUser(name, email, passwordHash);
+        await createUser(name, email, passwordHash);
 
         // Redirect to the home page after successful registration
         req.flash('success', 'Registration successful! You can now log in.');
-        res.redirect('/');
+        return res.redirect('/');
 
     } catch (error) {
         console.error('Error during user registration:', error);
         req.flash('error', 'Registration failed. Please try again.');
-        res.redirect('/register');
+        return res.redirect('/register');
     }   
 };
 
@@ -46,15 +46,15 @@ const processLoginForm = async (req, res) => {
                 console.log('User logged in:', user);
             }
 
-            res.redirect('/dashboard');
+            return res.redirect('/dashboard');
         } else {
             req.flash('error', 'Invalid email or password.');
-            res.redirect('/login');
+            return res.redirect('/login');
         }
     } catch (error) {
         console.error('Error during login:', error);
         req.flash('error', 'An error occurred during login. Please try again.');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
     
 };
@@ -70,7 +70,7 @@ const processLogout = async (req, res) => {
 const requireLogin = (req, res, next) => {
     if (!req.session.user) {
         req.flash('error', 'You must be logged in to access this page.');
-        return res.redirect('/login');
+        res.redirect('/login');
     }
     next();
 };
@@ -91,7 +91,7 @@ const showDashboard = (req, res) => {
  * @param {string} role - The role name required (e.g., 'admin', 'user')
  * @returns {Function} Express middleware function
  */
-const requireRole = (role) => {
+const requireRole = (role, redirectTo = '/') => {
     return (req, res, next) => {
         // Check if user is logged in first
         if (!req.session.user || !req.session) {
@@ -102,7 +102,7 @@ const requireRole = (role) => {
         // Check if user has the required role
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You are not authorized to access this page.');
-            return res.redirect('/');
+            return res.redirect(redirectTo);
         } 
         
         // Continue if user has required role
@@ -111,4 +111,11 @@ const requireRole = (role) => {
     };
 };
 
-export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole };
+const showRegisteredUsers = async (req, res) => {
+    const users = await getAllUsers();
+    
+    // Render the registered users view with user information
+    res.render('registered-users', { title: 'Registered Users', users });
+};
+
+export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole, showRegisteredUsers };
