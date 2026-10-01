@@ -34,9 +34,8 @@ const showLoginForm = (req, res) => {
 const processLoginForm = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await authenticateUser(email, password);
-
     try {
+        const user = await authenticateUser(email, password);
         if (user) {
             // Store user info in session and redirect to home page
             req.session.user = user;
@@ -64,13 +63,13 @@ const processLogout = async (req, res) => {
         delete req.session.user;
     }
     req.flash('success', 'You have been logged out.');
-    res.redirect('/');
+    return res.redirect('/');
 }
 
 const requireLogin = (req, res, next) => {
     if (!req.session.user) {
         req.flash('error', 'You must be logged in to access this page.');
-        res.redirect('/login');
+        return res.redirect('/login');
     }
     next();
 };
