@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers, getUserProjects, addProjectToUser, removeProjectFromUser } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -24,7 +24,7 @@ const processUserRegistrationForm = async (req, res) => {
         console.error('Error during user registration:', error);
         req.flash('error', 'Registration failed. Please try again.');
         return res.redirect('/register');
-    }   
+    }
 };
 
 const showLoginForm = (req, res) => {
@@ -55,7 +55,7 @@ const processLoginForm = async (req, res) => {
         req.flash('error', 'An error occurred during login. Please try again.');
         return res.redirect('/login');
     }
-    
+
 };
 
 const processLogout = async (req, res) => {
@@ -74,13 +74,14 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
-const showDashboard = (req, res) => {
+const showDashboard = async (req, res) => {
     // Get user information from the session
     const name = req.session.user.name;
     const email = req.session.user.email;
+    const projects = await getUserProjects(req.session.user.user_id);
 
     // Render the dashboard view with user information
-    res.render('dashboard', { title: 'Dashboard', name, email });
+    res.render('dashboard', { title: 'Dashboard', name, email, projects });
 }
 
 /**
@@ -102,19 +103,59 @@ const requireRole = (role, redirectTo = '/') => {
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You are not authorized to access this page.');
             return res.redirect(redirectTo);
-        } 
-        
+        }
+
         // Continue if user has required role
         next();
-        
+
     };
 };
 
 const showRegisteredUsers = async (req, res) => {
     const users = await getAllUsers();
-    
+
     // Render the registered users view with user information
     res.render('registered-users', { title: 'Registered Users', users });
 };
 
-export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole, showRegisteredUsers };
+const processVolunteer = async (req, res) => {
+    const projectId = req.params.projectId;
+    const userId = req.session.user.user_id;
+
+    try {
+        await addProjectToUser(userId, projectId);
+        req.flash('success', 'You have successfully volunteered for this project.');
+        
+        if (process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log(`User ${userId} volunteered for project ${projectId}`);
+        }
+
+    } catch (error) {
+        console.error('Error occurred while volunteering for project:', error);
+        req.flash('error', 'An error occurred while volunteering for the project. Please try again.');
+    }
+
+    return res.redirect('/dashboard');
+};
+
+const processRemoveVolunteer = async (req, res) => {
+    const projectId = req.params.projectId;
+    const userId = req.session.user.user_id;
+
+    try {
+        await removeProjectFromUser(userId, projectId);
+        req.flash('success', 'You have successfully removed your volunteer commitment for this project.');
+
+        if (process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log(`User ${userId} removed volunteer commitment for project ${projectId}`);
+        }
+
+    } catch (error) {
+        console.error('Error occurred while removing volunteer commitment:', error);
+        req.flash('error', 'An error occurred while removing your volunteer commitment. Please try again.');
+    }
+
+    return res.redirect('/dashboard');
+};
+
+export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole, showRegisteredUsers, processVolunteer, processRemoveVolunteer };

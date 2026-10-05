@@ -230,3 +230,20 @@ CREATE TABLE users (
         ON DELETE CASCADE
 );
 
+-- Create user_has_project table
+CREATE TABLE user_has_project (
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+
+    PRIMARY KEY (user_id, project_id),
+
+    CONSTRAINT fk_user_has_project_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_has_project_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_projects (project_id)
+        ON DELETE CASCADE
+);

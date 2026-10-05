@@ -72,4 +72,65 @@ const getAllUsers = async () => {
     return result.rows;
 };
 
-export { createUser, authenticateUser, getAllUsers };
+const addProjectToUser = async (userId, projectId) => {
+    const query = `
+    INSERT INTO user_has_project (user_id, project_id)
+    VALUES ($1, $2)
+        RETURNING project_id`;
+
+    const result = await db.query(query, [userId, projectId]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to volunteer for project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('User volunteered for project with ID:', result.rows[0].project_id);
+    }
+
+    return result.rows[0].project_id;
+};
+
+const removeProjectFromUser = async (userId, projectId) => {
+    const query = `
+    DELETE FROM user_has_project
+    WHERE user_id = $1 AND project_id = $2
+    RETURNING project_id`;
+
+    const result = await db.query(query, [userId, projectId]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to remove project from user');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Project removed from user with ID:', projectId);
+    }
+
+    return result.rows[0].project_id;
+};
+
+const getUserProjects = async (userId) => {
+    const query = `
+    SELECT p.project_id, p.title, p.description
+    FROM service_projects p
+    JOIN user_has_project uhp ON p.project_id = uhp.project_id
+    WHERE uhp.user_id = $1`;
+
+    const result = await db.query(query, [userId]);
+    return result.rows;
+};
+
+const hasUserVolunteered = async (userId, projectId) => {
+    const query = `
+    SELECT EXISTS (
+        SELECT 1
+        FROM user_has_project
+        WHERE user_id = $1 AND project_id = $2
+    ) AS has_volunteered`;
+
+    const result = await db.query(query, [userId, projectId]);
+    return result.rows[0].has_volunteered;
+};
+
+export { createUser, authenticateUser, getAllUsers, addProjectToUser, removeProjectFromUser, getUserProjects, hasUserVolunteered };

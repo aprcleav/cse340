@@ -1,11 +1,38 @@
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-    <h2>Welcome to your dashboard, <%= name %>!</h2>
-    <p><strong>Name:</strong> <%= name %></p>
-    <p><strong>Email:</strong> <%= email %></p>
-    <% if (user && user.role_name==='admin' ) { %>
-        <p><a href="/registered-users">View Registered Users</a></p>
-        <% } %>
-</main>
-<%- include('partials/footer') %>
+    <main>
+        <h1>
+            <%= title %>
+        </h1>
+        <p>Welcome to your dashboard, <%= name %>!</p>
+        <p><strong>Name:</strong>
+            <%= name %>
+        </p>
+        <p><strong>Email:</strong>
+            <%= email %>
+        </p>
+        <% if (user && user.role_name==='admin' ) { %>
+            <p><a href="/registered-users">View Registered Users</a></p>
+            <% } %>
+                <h2>Your Service Projects</h2>
+                <% if (projects.length> 0) { %>
+                    <ul>
+                        <% projects.forEach(project=> { %>
+                            <li class="volunteered">
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                                <form class="remove-volunteer" method="POST" action="/remove-volunteer/<%= project.project_id %>">
+                                    <button type="submit">Remove Volunteer Commitment</button>
+                                </form>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <p>You have not volunteered for any service projects yet.</p>
+                    
+                <% }; %>
+                    
+
+
+    </main>
+    <%- include('partials/footer') %>
